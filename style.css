@@ -15,4 +15,12 @@ body {
 .game-cell {
     background-color: rgb(238, 238, 238);
     border: 2px solid rgb(185, 185, 185);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.game-cell > h1 {
+    font-size: 8rem;
+    margin: 0 auto;
 }
