@@ -43,27 +43,37 @@ const playerO = newPlayer("O")
 // Section 3: Gameplay
 // =========================================
 
-// playerX.markCells(7)
-// console.log(playerX.getCellsArray())
-
-const turnLoop = (function (gameBoard, playerX, playerO) {
+// factory for running the game
+const gamePlay = (function (gameBoard) {
+    // for loop how many turns are there
     for (let i = 0; i < 9; i++) {
-
-        const [turn, mark] = playerTurn(i, playerX, playerO)
-        gameBoard[turn] = mark
+        if ((i + 1) % 2 === 0) { // player O turn
+            const choices = playerTurn(gameBoard)
+            gameBoard[choices] = "O"          
+        } else {  // player X turn
+            const choices = playerTurn(gameBoard)
+            gameBoard[choices] = "X"    
+        }
+        // gameBoard[turn] = mark            
     }
+    console.log(gameBoard)
 });
 
-const playerTurn = (function (turnNumber, playerX, playerO) {
-    if ((turnNumber + 1) % 2 === 0) {
-        // player O turns
-        // console.log(turnNumber + "O")
-        return [turnNumber, "O"];
-    } else {
-        // player X turns
-        // console.log(turnNumber + "x")
-        return [turnNumber, "X"];
+// factory for the player turn
+const playerTurn = (function (gameBoard) {
+    // for debugging range for ~random number~ that eventualy become input
+    const min = 0;
+    const max = 8;
+    let randomNumber = Math.floor(Math.random() * (max - min + 1)) + min;
+
+    // while loop to try again for correct number
+    while(gameBoard[randomNumber] !="") {
+        randomNumber = Math.floor(Math.random() * (max - min + 1)) + min;
+        console.log("wrong Number")
     }
+    // console.log("correct number")
+    return randomNumber
 });
 
-turnLoop(gameBoard, playerX, playerO)
+// run the game
+gamePlay(gameBoard)
