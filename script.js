@@ -8,7 +8,6 @@ const createGameCell = (function () {
     return gameCell;
 });
 
-
 // factory game cell
 const createGameBoard = (function () {
     const gameBoardArray = ["","","","","","","","",""]
@@ -27,7 +26,6 @@ const gameBoard = createGameBoard.getBoardArray()
 const newPlayer = (function (mark) {
     // create new array for choosen cells number
     const chosenCellsArray = [];
-    const chosenCells = null;
 
     // get the choosenCells
     const getCellsArray = () => chosenCellsArray;
@@ -42,40 +40,30 @@ const playerO = newPlayer("O")
 
 
 // =========================================
-// Section 3: Define Gameplay
+// Section 3: Gameplay
 // =========================================
 
 // playerX.markCells(7)
 // console.log(playerX.getCellsArray())
 
-const turnLoop = (function () {
-    for (let i = 1; i < 9; i++) {
-        playerTurn(i)
-    }
-})
+const turnLoop = (function (gameBoard, playerX, playerO) {
+    for (let i = 0; i < 9; i++) {
 
-const playerTurn = (function (turnNumber) {
-    if (turnNumber % 2 === 0) {
+        const [turn, mark] = playerTurn(i, playerX, playerO)
+        gameBoard[turn] = mark
+    }
+});
+
+const playerTurn = (function (turnNumber, playerX, playerO) {
+    if ((turnNumber + 1) % 2 === 0) {
         // player O turns
         // console.log(turnNumber + "O")
-        playerOoChoice(turnNumber)
+        return [turnNumber, "O"];
     } else {
         // player X turns
         // console.log(turnNumber + "x")
-        playerExChoice(turnNumber)
+        return [turnNumber, "X"];
     }
-})
-
-const playerExChoice = (function (inputNumber) {
-    // console.log(inputNumber)
-    const choice = () => inputNumber;
-    
-    // return {choice}
 });
 
-const playerOoChoice = (function (inputNumber) {
-    // console.log(inputNumber)
-    const choice = () => inputNumber;
-    // return {choice}
-});
-
+turnLoop(gameBoard, playerX, playerO)
