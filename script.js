@@ -28,11 +28,18 @@ const newPlayer = (function (mark) {
     // create new array for choosen cells number
     const chosenCellsArray = [];
 
+    // create current score
+    let score = 0;
+
     // get the choosenCells
     const getCellsArray = () => chosenCellsArray;
     const markCells = (chosenCells) => chosenCellsArray.push(chosenCells);
 
-    return {mark, getCellsArray, markCells};
+    // create function to add and get score
+    const addScore = () => score++;
+    const getScore = () => score;
+
+    return {mark, getCellsArray, markCells, addScore, getScore};
 });
 
 // create Players
@@ -100,3 +107,4 @@ const winConditions = (function (gameBoard, mark) {
 
 // run the game
 console.log(gamePlay(gameBoard));
+
