@@ -2,22 +2,30 @@
 // Section 1: Define Gameboard
 // =========================================
 
-// create game cells on html
-const createGameCell = (function () {
-    const gameCell = document.createElement('div');
-    gameCell.classList.add('game-cell');
-    return gameCell;
-});
-
-// factory game cell
+// function game board array
 const createGameBoard = (function () {
     const gameBoardArray = ["","","","","","","","",""]
     const getBoardArray = () => gameBoardArray;
     return {getBoardArray};
 })();
 
+// create game grid on html
+const createGameGrid = (function () {
+    const gameGrid = document.querySelector(".game-grid")
+    for (let i = 0; i < 9; i++) {
+        const gameCell = document.createElement("div");
+        gameCell.classList.add("game-cell");
+
+        gameCell.dataset.number = i
+        gameGrid.appendChild(gameCell)
+    }    
+})
+
 // Create the Gameboard
 const gameBoard = createGameBoard.getBoardArray();
+
+// display the grids on the page
+createGameGrid()
 
 // =========================================
 // Section 2: Define Players
@@ -48,41 +56,73 @@ const playerO = newPlayer("O");
 
 
 // =========================================
-// Section 3: Gameplay
+// Section 3: Gameplay 
 // =========================================
 
 // factory for running the game
 const gamePlay = (function (gameBoard) {
-    // for loop how many turns are there
-    for (let i = 0; i < 9; i++) {
-        if ((i + 1) % 2 === 0) { // player O turn
-            const choices = playerTurn(gameBoard)
-            gameBoard[choices] = "O"
-            if (winConditions(gameBoard, "O") === true) {
-                return "O wins"
+
+    const gameCells = document.querySelectorAll(".game-cell");
+
+    let turnStats = 0;
+
+    gameCells.forEach(function(gameCell) {
+        gameCell.addEventListener('click', function() {
+            console.log("clicked")
+            if ((turnStats + 1) % 2 === 0) { // player O turn
+                gameBoard[gameCell.dataset.number] = "O"
+    
+                const marked = document.createElement("h1")
+                marked.textContent = "O"
+    
+                gameCell.appendChild(marked)
+    
+                if (winConditions(gameBoard, "O") === true) {
+                    turnStats = 0
+                    console.log("O wins")
+                }
+                turnStats++;
+            } else {  // player X turn
+                gameBoard[gameCell.dataset.number] = "X"
+    
+                const marked = document.createElement("h1")
+                marked.textContent = "X"
+    
+                gameCell.appendChild(marked)
+    
+                if (winConditions(gameBoard, "X") === true) {
+                    turnStats = 0
+                    return "X wins"
+                }
+                turnStats++;
             }
-        } else {  // player X turn
-            const choices = playerTurn(gameBoard)
-            gameBoard[choices] = "X"    
-            if (winConditions(gameBoard, "X") === true) {
-                return "X wins"
-            }
-        if (i == 8) {return "Draw"}
-        } 
-    }
+            if (turnStats == 8) {
+                turnStats = 0
+                console.log("X wins")
+            }     
+        })
+        
+    })
 });
 
+const gameCells = document.querySelectorAll(".game-cell")
+
+
+// TODO: make winConditions inside playerTurn
+
 // factory for the player turn
-const playerTurn = (function (gameBoard) {
+const playerTurn = (function (gameBoard, gameCells) {
+
     // for debugging range for ~random number~ that eventualy become input
-    const min = 0;
-    const max = 8;
-    let randomNumber = Math.floor(Math.random() * (max - min + 1)) + min;
+    // const min = 0;
+    // const max = 8;
+    // let randomNumber = Math.floor(Math.random() * (max - min + 1)) + min;
+
 
     // while loop to try again for correct number
     while(gameBoard[randomNumber] !="") {
-        randomNumber = Math.floor(Math.random() * (max - min + 1)) + min;
-        console.log("wrong Number");
+        // randomNumber = Math.floor(Math.random() * (max - min + 1)) + min;
+        // console.log("wrong Number");
     }
     // console.log("correct number")
     return randomNumber;
@@ -90,7 +130,6 @@ const playerTurn = (function (gameBoard) {
 
 // Winning conditions
 const winConditions = (function (gameBoard, mark) {
-    console.log(gameBoard)
     if (
         (mark === gameBoard[0] && gameBoard[0] === gameBoard[1] && gameBoard[0] === gameBoard[2]) ||
         (mark === gameBoard[3] && gameBoard[3] === gameBoard[4] && gameBoard[3] === gameBoard[5]) ||
